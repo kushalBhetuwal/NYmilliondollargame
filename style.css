@@ -23,4 +23,5 @@ button{
     justify-content: center;
     gap:15px;
     padding:10px;
+    font-size:2rem;
 }

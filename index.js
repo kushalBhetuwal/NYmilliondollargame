@@ -1,47 +1,62 @@
-const buttons = document.querySelectorAll(".button");
-const button1 = buttons[0].children;
-
-let index = 1;
-buttonpressed = false;
-let word = "CRANE";
-let words = "";
+const buttons = document.querySelectorAll("button");
+console.log(buttons);
+let currentGuess = "";
+const answer_word = "brain";
+const answer_length = answer_word.length;
+let currentRow = 0; //keeping track of the current row
 
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
 }
 
-function focusnext() {
-  button1[index].focus();
-  buttonpressed = false;
-}
-count = 0;
-function takeword(word1) {
-  if (count > 3) {
-    if (word1 === word) {
-      alert("you are correct");
-    } else {
-      alert("you have entered the incorrect word:")
-      
-    }
+function addLetter(letter) {
+  if (currentGuess.length < answer_length) {
+    currentGuess += letter;
   }
-  count++;
-
-  return;
+  buttons[answer_length * currentRow + currentGuess.length - 1].innerText =
+    letter;
+  //css-js
+  buttons[answer_length * currentRow + currentGuess.length - 1].style.fontSize =
+    "1.7rem";
+  buttons[
+    answer_length * currentRow + currentGuess.length - 1
+  ].style.fontWeight = "bold";
 }
 
-Array.from(button1).forEach((button) => {
+function handleEnter() {
+  if (currentGuess.length < answer_length) {
+    //do nothing
+    return;
+  }
+
+  //Todo validate the word
+  //Todo correct word, incorrect word, correct word but in incorrect index, correct word in the correct index
+  //Todo correct word in the correct index  = win
+  //Todo correct word in the incorrect index, incorrect word= lose
+
+
+  currentRow++;
+  currentGuess = "";
+}
+function handleBackspace() {
+  if (currentGuess == "") {
+    //do nothing
+    return;
+  }
+  buttons[answer_length * currentRow + currentGuess.length - 1].innerText = "";
+  currentGuess = currentGuess.slice(0, -1);
+}
+
+buttons.forEach((button) => {
   button.addEventListener("keydown", (event) => {
-    if (!isLetter(event.key)) {
-      event.preventDefault();
-    } else {
-      if (!buttonpressed) {
-        button.innerText = event.key.toUpperCase();
-        words = words + button.innerText;
-        buttonpressed = true;
-        focusnext();
-        index++;
-      }
+    const action = event.key;
+    console.log(action);
+    if (action === "Enter") {
+      handleEnter();
+    } else if (action === "Backspace") {
+      handleBackspace();
+    } else if (isLetter(action)) {
+      addLetter(action.toUpperCase());
     }
-    takeword(words);
   });
 });
