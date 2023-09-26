@@ -1,5 +1,5 @@
 const buttons = document.querySelectorAll("button");
-const loadingDiv = document.querySelector('.info-bar');
+const loadingDiv = document.querySelector(".info-bar");
 console.log(buttons);
 let currentGuess = "";
 const answer_word = "brain";
@@ -23,6 +23,13 @@ function addLetter(letter) {
     answer_length * currentRow + currentGuess.length - 1
   ].style.fontWeight = "bold";
 }
+async function requestWord() {
+  const response = await fetch("https://words.dev-apis.com/word-of-the-day");
+  const { word } = await response.json();
+  console.log(word.toUpperCase());
+  loadingState();
+}
+requestWord();
 
 function handleEnter() {
   if (currentGuess.length < answer_length) {
@@ -34,7 +41,6 @@ function handleEnter() {
   //Todo correct word, incorrect word, correct word but in incorrect index, correct word in the correct index
   //Todo correct word in the correct index  = win
   //Todo correct word in the incorrect index, incorrect word= lose
-
 
   currentRow++;
   currentGuess = "";
@@ -48,8 +54,8 @@ function handleBackspace() {
   currentGuess = currentGuess.slice(0, -1);
 }
 
-function loadingState(){
- loadingDiv.classList.add('hidden');
+function loadingState() {
+  loadingDiv.classList.add("hidden");
 }
 
 buttons.forEach((button) => {

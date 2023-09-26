@@ -25,9 +25,26 @@ button{
     padding:10px;
     font-size:2rem;
 }
-.spiral{
-    display:flex;
-    justify-content: center;
+
+.hidden{
+    visibility:hidden;
+}
+.info-bar {
+    display: flex;
     align-items: center;
+    justify-content: center;
+  }
+
+.spiral{
+    animation-name:spin;
+    animation-iteration-count:infinite;
+    animation-duration:2s;
+    animation-timing-function:linear;
     font-size:2rem;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(1440deg);
+    }
 }
