@@ -1,4 +1,5 @@
 const buttons = document.querySelectorAll("button");
+const loadingDiv = document.querySelector('.info-bar');
 console.log(buttons);
 let currentGuess = "";
 const answer_word = "brain";
@@ -45,6 +46,10 @@ function handleBackspace() {
   }
   buttons[answer_length * currentRow + currentGuess.length - 1].innerText = "";
   currentGuess = currentGuess.slice(0, -1);
+}
+
+function loadingState(){
+ loadingDiv.classList.add('hidden');
 }
 
 buttons.forEach((button) => {
