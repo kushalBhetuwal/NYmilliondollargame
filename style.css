@@ -49,6 +49,9 @@ button{
     align-items: center;
     justify-content: center;
   }
+  .visibility{
+    display:none;
+  }
 
 .spiral{
     animation-name:spin;
@@ -57,9 +60,38 @@ button{
     animation-timing-function:linear;
     font-size:2rem;
 }
+.winLose h2{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:#1AACAC;
+    animation-name:flash;
+    animation-duration:0.7s;
+    animation-timing-function: cubic-bezier(0,.92,1,-0.85);
+    animation-delay:0s;
+}
+.newdiv{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}
+
 
 @keyframes spin{
     to{
         transform:rotate(1440deg);
     }
+}
+
+@keyframes flash{
+    0%{
+        opacity:0;
+    }
+    50%{
+        opacity:1;
+    }
+    100%{
+        opacity:1;
+    }
+
 }

@@ -1,5 +1,7 @@
 const buttons = document.querySelectorAll("button");
 const loadingDiv = document.querySelector(".info-bar");
+const winLose = document.querySelector(".winLose");
+const newdiv = document.querySelector(".newdiv");
 
 async function init() {
   function isLetter(letter) {
@@ -11,6 +13,7 @@ async function init() {
   const response = await fetch("https://words.dev-apis.com/word-of-the-day");
   const data = await response.json();
   const word = data.word.toUpperCase();
+  let Rounds = 0;
   setLoading();
 
   function addLetter(letter) {
@@ -28,12 +31,15 @@ async function init() {
       currentRow * answer_length + currentGuessWord.length - 1
     ].style.fontWeight = "bold";
   }
+  taskcompleted = false;
 
   function handleEnter() {
+    if (taskcompleted) {
+      return;
+    }
     if (currentGuessWord.length < answer_length) {
       return;
     }
-
     const countobject = lettercount(word);
     newarray = currentGuessWord.split("");
 
@@ -57,8 +63,34 @@ async function init() {
       }
     }
 
+    function div(string, color, font,targetDiv) {
+      const h2 = document.createElement("h2");
+      h2.textContent = string;
+      h2.style.color = color;
+      h2.style.fontSize = font;
+      targetDiv.appendChild(h2);
+    }
+
+    if (currentGuessWord === word) {
+      winLose.classList.add("visibility");
+      div("Congrats, you have won the game!!!", "#6499E9", "4rem", newdiv);
+      taskcompleted = true;
+      return;
+    } else {
+      loadingDiv.classList.toggle("visibility");
+      div("Don't give up!!", "red", "", winLose);
+    }
+
+    if (Rounds === 5) {
+          winLose.classList.toggle("visibility");
+          div("Sorry , you have lost", "#D83F31", "3rem",newdiv);
+           taskcompleted = true;
+      return;
+    }
+
     currentGuessWord = "";
     currentRow++;
+    Rounds++;
   }
 
   function handleBackspace() {
@@ -73,6 +105,9 @@ async function init() {
 
   buttons.forEach((button) => {
     button.addEventListener("keydown", (event) => {
+      if (Rounds === 6) {
+        return;
+      }
       const action = event.key;
       if (action === "Enter") {
         handleEnter();

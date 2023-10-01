@@ -1,10 +1,14 @@
+const animate = document.querySelector(".animate");
+console.log(animate);
+const addingdiv = document.querySelector('.simulation')
+console.log(addingdiv);
 
-word = "lakemba"
-let object = {};
 
-for (let i = 0; i < word.length; i++) {
-  let key = word[i];
-  object[key] ? object[key]-- : (object[key] = 1);
+function addDiv(string, targetDiv){
+  const h2 = document.createElement("h2");
+  h2.textContent = string;
+  targetDiv.appendChild(h2);
 }
 
-console.log(object);
+addDiv("yes kushal", animate);
+addDiv("danger", addingdiv);
