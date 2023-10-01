@@ -25,7 +25,22 @@ button{
     padding:10px;
     font-size:2rem;
 }
+.correct{
+    background-color:green;
+    border:none;
+   color:white;
+}
+.wrong{
+    background-color:#ccc;
+    color:black;
+    border:none;
+}
 
+.close{
+    background-color:orange;
+    color:white;
+    border:none;
+}
 .hidden{
     visibility:hidden;
 }

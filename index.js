@@ -1,73 +1,101 @@
 const buttons = document.querySelectorAll("button");
 const loadingDiv = document.querySelector(".info-bar");
-console.log(buttons);
-let currentGuess = "";
-const answer_word = "brain";
-const answer_length = answer_word.length;
-let currentRow = 0; //keeping track of the current row
 
-function isLetter(letter) {
-  return /^[a-zA-Z]$/.test(letter);
-}
-
-function addLetter(letter) {
-  if (currentGuess.length < answer_length) {
-    currentGuess += letter;
+async function init() {
+  function isLetter(letter) {
+    return /^[a-zA-Z]$/.test(letter);
   }
-  buttons[answer_length * currentRow + currentGuess.length - 1].innerText =
-    letter;
-  //css-js
-  buttons[answer_length * currentRow + currentGuess.length - 1].style.fontSize =
-    "1.7rem";
-  buttons[
-    answer_length * currentRow + currentGuess.length - 1
-  ].style.fontWeight = "bold";
-}
-async function requestWord() {
+  let currentGuessWord = "";
+  let answer_length = 5;
+  let currentRow = 0;
   const response = await fetch("https://words.dev-apis.com/word-of-the-day");
-  const { word } = await response.json();
-  console.log(word.toUpperCase());
-  loadingState();
-}
-requestWord();
+  const data = await response.json();
+  const word = data.word.toUpperCase();
+  setLoading();
 
-function handleEnter() {
-  if (currentGuess.length < answer_length) {
-    //do nothing
-    return;
-  }
-
-  //Todo validate the word
-  //Todo correct word, incorrect word, correct word but in incorrect index, correct word in the correct index
-  //Todo correct word in the correct index  = win
-  //Todo correct word in the incorrect index, incorrect word= lose
-
-  currentRow++;
-  currentGuess = "";
-}
-function handleBackspace() {
-  if (currentGuess == "") {
-    //do nothing
-    return;
-  }
-  buttons[answer_length * currentRow + currentGuess.length - 1].innerText = "";
-  currentGuess = currentGuess.slice(0, -1);
-}
-
-function loadingState() {
-  loadingDiv.classList.add("hidden");
-}
-
-buttons.forEach((button) => {
-  button.addEventListener("keydown", (event) => {
-    const action = event.key;
-    console.log(action);
-    if (action === "Enter") {
-      handleEnter();
-    } else if (action === "Backspace") {
-      handleBackspace();
-    } else if (isLetter(action)) {
-      addLetter(action.toUpperCase());
+  function addLetter(letter) {
+    if (currentGuessWord.length < answer_length) {
+      currentGuessWord += letter;
     }
+    buttons[
+      answer_length * currentRow + currentGuessWord.length - 1
+    ].innerText = letter;
+    //css in js
+    buttons[
+      currentRow * answer_length + currentGuessWord.length - 1
+    ].style.fontSize = "2rem";
+    buttons[
+      currentRow * answer_length + currentGuessWord.length - 1
+    ].style.fontWeight = "bold";
+  }
+
+  function handleEnter() {
+    if (currentGuessWord.length < answer_length) {
+      return;
+    }
+
+    const countobject = lettercount(word);
+    newarray = currentGuessWord.split("");
+
+    for (let i = 0; i < answer_length; i++) {
+      let key = newarray[i];
+      if (key === word[i]) {
+        buttons[currentRow * answer_length + i].classList.add("correct");
+        countobject[key]--;
+      }
+    }
+
+    for (let i = 0; i < answer_length; i++) {
+      let key = newarray[i];
+      if (key === word[i]) {
+        //do nothing
+      } else if (word.includes(key) && countobject[key] > 0) {
+        buttons[currentRow * answer_length + i].classList.add("close");
+        countobject[key]--;
+      } else {
+        buttons[currentRow * answer_length + i].classList.add("wrong");
+      }
+    }
+
+    currentGuessWord = "";
+    currentRow++;
+  }
+
+  function handleBackspace() {
+    if (currentGuessWord.length === 0) {
+      return;
+    }
+    buttons[
+      currentRow * answer_length + currentGuessWord.length - 1
+    ].innerText = "";
+    currentGuessWord = currentGuessWord.slice(0, -1);
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("keydown", (event) => {
+      const action = event.key;
+      if (action === "Enter") {
+        handleEnter();
+      } else if (action === "Backspace") {
+        handleBackspace();
+      } else if (isLetter(action)) {
+        addLetter(action.toUpperCase());
+      }
+    });
   });
-});
+
+  function setLoading() {
+    return loadingDiv.classList.add("hidden");
+  }
+
+  function lettercount(letter) {
+    let object = {};
+    for (let i = 0; i < letter.length; i++) {
+      let key = letter[i];
+      object[key] ? object[key]++ : (object[key] = 1);
+    }
+    return object;
+  }
+}
+
+init();
