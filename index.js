@@ -8,9 +8,10 @@ async function init() {
   let currentGuessWord = "";
   let answer_length = 5;
   let currentRow = 0;
-  const response = await fetch("https://words.dev-apis.com/word-of-the-day");
+  const response = await fetch("https://words.dev-apis.com/word-of-the-day?random=1");
   const data = await response.json();
   const word = data.word.toUpperCase();
+  console.log(word);
   let Rounds = 0;
   setLoading();
 
