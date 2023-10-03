@@ -1,14 +1,10 @@
-const animate = document.querySelector(".animate");
-console.log(animate);
-const addingdiv = document.querySelector('.simulation')
-console.log(addingdiv);
+function celebrateWin() {
+  const congratulationsDiv = document.querySelector('.congratulations');
+  congratulationsDiv.style.display = 'block';
 
-
-function addDiv(string, targetDiv){
-  const h2 = document.createElement("h2");
-  h2.textContent = string;
-  targetDiv.appendChild(h2);
+  setTimeout(() => {
+      congratulationsDiv.style.display = 'none';
+  }, 5000); // Hide the animation after 5 seconds
 }
 
-addDiv("yes kushal", animate);
-addDiv("danger", addingdiv);
+// Call celebrateWin() when the player wins the game

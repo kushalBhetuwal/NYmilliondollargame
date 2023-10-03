@@ -1,7 +1,5 @@
 const buttons = document.querySelectorAll("button");
 const loadingDiv = document.querySelector(".info-bar");
-const winLose = document.querySelector(".winLose");
-const newdiv = document.querySelector(".newdiv");
 
 async function init() {
   function isLetter(letter) {
@@ -33,13 +31,34 @@ async function init() {
   }
   taskcompleted = false;
 
-  function handleEnter() {
+  async function handleEnter() {
     if (taskcompleted) {
       return;
     }
     if (currentGuessWord.length < answer_length) {
       return;
     }
+    //validate the word
+    const response = await fetch("https://words.dev-apis.com/validate-word", {
+      method: "POST",
+      body: JSON.stringify({ word: currentGuessWord }),
+    });
+    const { validWord } = await response.json();
+
+    if (!validWord) {
+      alert("invalid word, please try again");
+      markinvalid();
+      return;
+    }
+
+    function markinvalid() {
+      for (let i = 0; i < answer_length; i++) {
+        buttons[currentRow * answer_length + i].classList.remove("flash");
+        setTimeout(()=>buttons[currentRow * answer_length + i].classList.add('flash'),5)
+      }
+      
+    }
+    //
     const countobject = lettercount(word);
     newarray = currentGuessWord.split("");
 
@@ -63,28 +82,18 @@ async function init() {
       }
     }
 
-    function div(string, color, font,targetDiv) {
-      const h2 = document.createElement("h2");
-      h2.textContent = string;
-      h2.style.color = color;
-      h2.style.fontSize = font;
-      targetDiv.appendChild(h2);
-    }
-
     if (currentGuessWord === word) {
-      winLose.classList.add("visibility");
-      div("Congrats, you have won the game!!!", "#6499E9", "4rem", newdiv);
+      alert("you have won the game");
+      document.querySelector('.brand').classList.add('winner');
       taskcompleted = true;
       return;
     } else {
-      loadingDiv.classList.toggle("visibility");
-      div("Don't give up!!", "red", "", winLose);
+      alert("dont' give up!!");
     }
 
     if (Rounds === 5) {
-          winLose.classList.toggle("visibility");
-          div("Sorry , you have lost", "#D83F31", "3rem",newdiv);
-           taskcompleted = true;
+      alert(`you have lost, the correct word is "${word}"`);
+      taskcompleted = true;
       return;
     }
 
